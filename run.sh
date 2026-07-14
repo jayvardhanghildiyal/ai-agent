@@ -1,5 +1,8 @@
 #!/bin/bash
 
 # to run the main.py file
+echo -e "\nwhat is it you wish to ask ?"
 
-uv run main.py
+read QUESTION
+
+uv run main.py $QUESTION

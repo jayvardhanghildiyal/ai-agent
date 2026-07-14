@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+import argparse
 
 # load environment variables
 load_dotenv()
@@ -17,22 +18,41 @@ client = OpenAI(
     api_key = api_key,
 )
 
-# model = "openrouter/free"
-model = "openai/gpt-oss-20b:free"
-# a hard-coded role and question for testing
-# messages are saved in a dictionary / object with the role and content keys
+# we create an argument parser that takes in a user-request
+parser = argparse.ArgumentParser(description="talk to a LLM !")
+parser.add_argument("user_prompt", type=str, help="the argument is a question asked to the LLM")
+parser.add_argument("--verbose", action = "store_true", help = "allows the user to view verbose output")
+args = parser.parse_args()
+
+# message list to hold conversations
 messages = [
-    {
-        "role": "user",
-        "content": "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum.",
-    }
+    {"role": "user", "content": args.user_prompt},
 ]
 
+# model = "openai/gpt-oss-20b:free"
 # this generates a response from the LLMs we will use
 # takes two parameters, model and messages 
-client.chat.completions.create(messages, model)
+response = client.chat.completions.create(
+    model = "openrouter/free", 
+    # messages are saved in a dictionary / object with the role and content keys
+    messages = messages
+)
 
+# if the usage object is empty
+if response.usage is None :
+    raise RuntimeError("Likely failed API request")
+
+# if verbose mode is on
+if args.verbose :
+    print(f"User prompt: {args.user_prompt}")
+    # printing and tracking the number of tokens used 
+    print(f"Prompt tokens: {response.usage.prompt_tokens}")
+    print(f"Response tokens: {response.usage.completion_tokens}")
+
+# print the response afterwards
+print("\nResponse: \n")
 print(response.choices[0].message.content)
+
 # def main():
 #     print("Hello from ai-agent!")
 
