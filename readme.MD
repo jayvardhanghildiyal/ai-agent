@@ -1,5 +1,13 @@
 # AI Agent
 
+### WARNING !
+
+This project is built for learning purposes only and should not be used if you don't know what you're doing **AT ALL**.
+
+The LLM has the ability to **overwrite files in a specified directory**. It also has the ability to **run arbitrary python code on your machine** (but only within the specified directory).
+
+Clone this project in an isolated directory, away from important documents and system files. And have fun !
+
 ### pipeline
 
 give instructions to LLM -> directory location validation -> file location validation and reading
