@@ -10,7 +10,7 @@ Clone this project in an isolated directory, away from important documents and s
 
 ### pipeline
 
-give instructions to LLM -> directory location validation -> file location validation and reading
+give instructions to LLM -> directory location validation -> file location validation and reading -> LLM can run subprocesses in a loop to make varying decisions if necessary
 
 ### Standard Libraries are kinda peng
 

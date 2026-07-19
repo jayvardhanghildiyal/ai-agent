@@ -13,5 +13,9 @@
 # uv run test_get_file_content.py
 
 # run the tests for the write_file function / checking write functionality
-echo -e "\n~~ uv run test_write_file.py  ~~\n"
-uv run test_write_file.py
+# echo -e "\n~~ uv run test_write_file.py  ~~\n"
+# uv run test_write_file.py
+
+# run the tests for the run_python_file function
+echo -e "\n~~ uv run test_run_python_file.py ~~\n"
+uv run test_run_python_file.py

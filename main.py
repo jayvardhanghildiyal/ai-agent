@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 import argparse
+from config import system_prompt
 
 # load environment variables
 load_dotenv()
@@ -25,11 +26,12 @@ parser.add_argument("--verbose", action = "store_true", help = "allows the user 
 args = parser.parse_args()
 
 # message list to hold conversations
+# the system prompt goes first to define the behaviour and rules set on the LLM
 messages = [
-    {"role": "user", "content": args.user_prompt},
+    {"role" : "system", "content" : system_prompt},
+    {"role": "user", "content": args.user_prompt}
 ]
 
-# model = "openai/gpt-oss-20b:free"
 # this generates a response from the LLMs we will use
 # takes two parameters, model and messages 
 response = client.chat.completions.create(
