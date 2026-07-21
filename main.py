@@ -1,9 +1,9 @@
-import os
+import os, json
 from dotenv import load_dotenv
 from openai import OpenAI
 import argparse
 from config import system_prompt
-
+from functions.call_function import available_functions
 # load environment variables
 load_dotenv()
 
@@ -34,10 +34,13 @@ messages = [
 
 # this generates a response from the LLMs we will use
 # takes two parameters, model and messages 
+# much later, we have now added a third parameter
+# it provides a list of tools available to the LLM
 response = client.chat.completions.create(
     model = "openrouter/free", 
     # messages are saved in a dictionary / object with the role and content keys
-    messages = messages
+    messages = messages,
+    tools = available_functions
 )
 
 # if the usage object is empty
@@ -50,6 +53,15 @@ if args.verbose :
     # printing and tracking the number of tokens used 
     print(f"Prompt tokens: {response.usage.prompt_tokens}")
     print(f"Response tokens: {response.usage.completion_tokens}")
+
+# addressing any tools that the LLM wants to call
+# printing them for now
+# print(response)
+message = response.choices[0].message
+
+for tool_call in message.tool_calls or []:
+    func_args = json.loads(tool_call.function.arguments or "{}")
+    print(f"Function call needed : {tool_call.function.name}({func_args})")
 
 # print the response afterwards
 print("\nResponse: \n")

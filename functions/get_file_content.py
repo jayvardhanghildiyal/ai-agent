@@ -28,3 +28,20 @@ def get_file_content(working_directory: str, file_path: str) -> str:
             return contents
     except Exception as e :
         return f"Error: {e}"    
+    
+schema_get_file_content = {
+    "type": "function",
+    "function": {
+        "name": "get_file_content",
+        "description": "fetch file from it's current location and return it's contents in string format",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "path of the file whose contents we want to return, relative to the working directory",
+                },
+            },
+        },
+    },
+}

@@ -18,7 +18,7 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
         
         # now to check if the parent directory on the file_path exists
         parent_dir = os.path.dirname(target_file)
-        print(parent_dir)
+        # print(parent_dir)
         if not parent_dir :
             os.makedirs(parent_dir)
 
@@ -30,3 +30,24 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
         return f'Successfully wrote to "{file_path}" ({len(content)} characters written)'
     except Exception as e :
         return f"Error: {e}"
+
+schema_write_file = {
+    "type": "function",
+    "function": {
+        "name": "write_file",
+        "description": "fetch a file from a given location and write / overwrite. the contents to write in said file are provided",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "path of the file we want to write / overwrite in, relative to the working directory",
+                },
+                "content": {
+                    "type": "string",
+                    "description": "content we want to write / overwrite the file with",
+                }
+            },
+        },
+    },
+}

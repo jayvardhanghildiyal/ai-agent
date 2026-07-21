@@ -10,7 +10,11 @@ Clone this project in an isolated directory, away from important documents and s
 
 ### pipeline
 
-give instructions to LLM -> directory location validation -> file location validation and reading -> LLM can run subprocesses in a loop to make varying decisions if necessary
+give instructions to LLM -> directory location validation -> file location validation and reading -> LLM can ask to run functions -> we run subprocesses in a loop to make varying decisions if necessary
+
+the LLM is basically a decision making engine, with info about the functions (tools) available to it.
+
+each function has a JSON schema that is passed to the LLM. this tells what tools they can call and when they should call them.
 
 ### Standard Libraries are kinda peng
 

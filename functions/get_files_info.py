@@ -41,3 +41,23 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
 
     except Exception as e :
         return f"Error: {e}"
+    
+# JSON schemas tell teh LLM how the function should be used
+# working directory is not mentioned as a parameter
+# because we want to pass it externally, so that the LLM as no knowledge of it
+schema_get_files_info = {
+    "type": "function",
+    "function": {
+        "name": "get_files_info",
+        "description": "Lists files in a specified directory relative to the working directory, providing file size and directory status",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "directory": {
+                    "type": "string",
+                    "description": "Directory path to list files from, relative to the working directory (default is the working directory itself)",
+                },
+            },
+        },
+    },
+}
