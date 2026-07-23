@@ -29,7 +29,6 @@ def run_python_file(working_directory: str, file_path: str, args: list[str] | No
         if args:
             command.extend(args)
         
-        print(command)
         # create a subprocess and run it
         completed_obj = subprocess.run(command, capture_output = True, cwd = work_abs, text = True, timeout = 30)
 

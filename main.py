@@ -6,6 +6,7 @@ from config import system_prompt
 from functions.call_function import available_functions
 # load environment variables
 load_dotenv()
+from functions.call_function import *
 
 api_key = os.environ.get("OPENROUTER_API_KEY")
 # raise a RuntimeError if the key is not found
@@ -60,8 +61,14 @@ if args.verbose :
 message = response.choices[0].message
 
 for tool_call in message.tool_calls or []:
-    func_args = json.loads(tool_call.function.arguments or "{}")
-    print(f"Function call needed : {tool_call.function.name}({func_args})")
+    try :
+        result_message = call_function(tool_call, args.verbose)
+        if not result_message.get("content") :
+            raise RuntimeError(f"Empty function response for {tool_call.function.name}")
+        if args.verbose :
+            print(f"-> {result_message['content']}")
+    except Exception as e :
+        print(e)
 
 # print the response afterwards
 print("\nResponse: \n")
