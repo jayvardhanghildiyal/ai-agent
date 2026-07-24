@@ -16,6 +16,8 @@ the LLM is basically a decision making engine, with info about the functions (to
 
 each function has a JSON schema that is passed to the LLM. this tells what tools they can call and when they should call them.
 
+every response that it generates is appended to a `messages` list. this way, the LLM remembers the order of messages sent befor. any tool calls executed can also be inferred.
+
 ### Standard Libraries are kinda peng
 
 using standard libraries is convinient. any code that is prone to errors can just be put in a try / except block. error handling and passage of helpful messages is done automatically

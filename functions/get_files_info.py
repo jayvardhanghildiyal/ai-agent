@@ -30,6 +30,7 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
         if not valid_dir :
             return f'    Error: Cannot list "{directory}" as it is outside the permitted working directory'
 
+        output = ""
         for content in contents :
             if not content == "__pycache__" :
                 abs_path = os.path.join(target_dir, content)
@@ -37,8 +38,9 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
                 size = os.path.getsize(abs_path)
                 is_dir = os.path.isdir(abs_path)
 
-                print(f"  - {content}: file_size={size} bytes, is_dir={is_dir}")
+                output += f"  - {content}: file_size={size} bytes, is_dir={is_dir}\n"
 
+        return output
     except Exception as e :
         return f"Error: {e}"
     

@@ -33,50 +33,56 @@ messages = [
     {"role": "user", "content": args.user_prompt}
 ]
 
-# this generates a response from the LLMs we will use
-# takes two parameters, model and messages 
-# much later, we have now added a third parameter
-# it provides a list of tools available to the LLM
-response = client.chat.completions.create(
-    model = "openrouter/free", 
-    # messages are saved in a dictionary / object with the role and content keys
-    messages = messages,
-    tools = available_functions
-)
+# put the model calling code in a loop 
+# so that the LLM can work off of previous actions
+for _ in range (20) :
+    # this generates a response from the LLMs we will use
+    # takes two parameters, model and messages 
+    # much later, we have now added a third parameter
+    # it provides a list of tools available to the LLM
+    response = client.chat.completions.create(
+        model = "openrouter/free", 
+        # messages are saved in a dictionary / object with the role and content keys
+        messages = messages,
+        tools = available_functions
+    )
 
-# if the usage object is empty
-if response.usage is None :
-    raise RuntimeError("Likely failed API request")
+    # if the usage object is empty
+    if response.usage is None :
+        raise RuntimeError("Likely failed API request")
 
-# if verbose mode is on
-if args.verbose :
-    print(f"User prompt: {args.user_prompt}")
-    # printing and tracking the number of tokens used 
-    print(f"Prompt tokens: {response.usage.prompt_tokens}")
-    print(f"Response tokens: {response.usage.completion_tokens}")
+    # if verbose mode is on
+    if args.verbose :
+        print(f"User prompt: {args.user_prompt}")
+        # printing and tracking the number of tokens used 
+        print(f"Prompt tokens: {response.usage.prompt_tokens}")
+        print(f"Response tokens: {response.usage.completion_tokens}")
 
-# addressing any tools that the LLM wants to call
-# printing them for now
-# print(response)
-message = response.choices[0].message
+    # addressing any tools that the LLM wants to call
+    # printing them for now
+    # print(response)
+    message = response.choices[0].message
+    # this will give the model context
+    # the message object also has the tool calls in it
+    messages.append(message)
 
-for tool_call in message.tool_calls or []:
-    try :
-        result_message = call_function(tool_call, args.verbose)
-        if not result_message.get("content") :
-            raise RuntimeError(f"Empty function response for {tool_call.function.name}")
-        if args.verbose :
-            print(f"-> {result_message['content']}")
-    except Exception as e :
-        print(e)
+    # break out and give the final response
+    if not message.tool_calls :
+        break
+
+    for tool_call in message.tool_calls:
+        try :
+            result_message = call_function(tool_call, args.verbose)
+            if not result_message.get("content") :
+                raise RuntimeError(f"Empty function response for {tool_call.function.name}")
+            if args.verbose :
+                print(f"-> {result_message['content']}")
+
+            # append the tool call message so that the LLM can infer the resultd
+            messages.append(result_message)
+        except Exception as e :
+            print(e)
 
 # print the response afterwards
-print("\nResponse: \n")
-print(response.choices[0].message.content)
-
-# def main():
-#     print("Hello from ai-agent!")
-
-if __name__ == "__main__":
-    # main()
-    pass
+print("\nFinal Response: \n")
+print(messages[-1].role, messages[-1].content)
